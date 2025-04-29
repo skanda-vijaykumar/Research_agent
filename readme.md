@@ -1,6 +1,7 @@
 ## First Research Agent
 
 A Streamlit-based research assistant that dynamically plans and executes web searches using LangChain, Tavily, Google Serper, and DuckDuckGo to synthesize comprehensive answers from multiple sources.
+This project is my attempt to build a custom Agent orchestration framework just using langchain and not relying on any traiditional frameworks like langgraph, crewAI or autogen. The retirever part of this project is interesting imo, it pulls info from different sources and then pools them together find the date and focuses on the most recent information also with relevancy with 60-40 ratio. plans and queries based this retirever based on user query. 
 
 ## demo
 ![temp](https://github.com/user-attachments/assets/c6f88784-4fd7-4221-beca-349a462a6695)
