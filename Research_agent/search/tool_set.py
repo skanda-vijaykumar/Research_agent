@@ -1,6 +1,3 @@
-"""
-Search tools for the research agent.
-"""
 from ..config import get_llm, TAVILY_API_KEY, SERPER_API_KEY
 from ..models.data_models import SearchStrategy
 from .retriever import EnhancedMultiSearchRetriever, DummySearchRetriever
@@ -10,9 +7,6 @@ from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 
 class ToolSet:
-    """
-    Manages the available search tools and retrievers.
-    """
     def __init__(self):
         try:
             # Initialize all web search clients
@@ -60,15 +54,6 @@ class ToolSet:
         self.llm = get_llm()
     
     def select_search_tool(self, strategy: SearchStrategy):
-        """
-        Select the appropriate search tool based on the search strategy.
-        
-        Args:
-            strategy (SearchStrategy): The search strategy to use
-            
-        Returns:
-            BaseRetriever: The selected search retriever
-        """
         if strategy == SearchStrategy.SPECIFIC_ENTITY:
             return self.entity_search
         elif strategy in [SearchStrategy.NEWS, SearchStrategy.LATEST]:
