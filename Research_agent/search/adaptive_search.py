@@ -1,6 +1,3 @@
-"""
-Adaptive search components for the research agent.
-"""
 import re
 from typing import Dict, Any, List
 from datetime import datetime
@@ -12,25 +9,12 @@ from ..models.data_models import SearchStrategy, SearchState, QueryExecution
 from .tool_set import ToolSet
 
 class AdaptiveSearchManager:
-    """
-    Manages adaptive search across multiple search tools with retry logic.
-    """
     def __init__(self, tool_set: ToolSet, max_retries=3):
         self.tool_set = tool_set
         self.max_retries = max_retries
         self.llm = get_llm(temperature=0.2)
     
     def execute_search(self, search_step: Dict[str, Any], query_execution: QueryExecution) -> SearchState:
-        """
-        Execute a search step using the appropriate tool.
-        
-        Args:
-            search_step (Dict[str, Any]): The search step to execute
-            query_execution (QueryExecution): The current query execution context
-            
-        Returns:
-            SearchState: The result of the search
-        """
         # Get the appropriate search tool
         strategy = search_step.get("search_strategy", SearchStrategy.GENERAL)
         tool = self.tool_set.select_search_tool(strategy)
@@ -75,16 +59,6 @@ class AdaptiveSearchManager:
             )
     
     def execute_with_retries(self, search_step: Dict[str, Any], query_execution: QueryExecution) -> SearchState:
-        """
-        Execute a search with retries and query reformulation.
-        
-        Args:
-            search_step (Dict[str, Any]): The search step to execute
-            query_execution (QueryExecution): The current query execution context
-            
-        Returns:
-            SearchState: The best search result after retries
-        """
         best_search_state = None
         
         for attempt in range(self.max_retries):
@@ -119,17 +93,6 @@ class AdaptiveSearchManager:
         return best_search_state
     
     def _assess_result_quality(self, query: str, documents: List[Document], original_query: str) -> float:
-        """
-        Assess the quality of search results.
-        
-        Args:
-            query (str): The query used for the search
-            documents (List[Document]): The search results
-            original_query (str): The original user query
-            
-        Returns:
-            float: A quality score between 0 and 1
-        """
         if not documents:
             return 0.0
         
@@ -165,20 +128,8 @@ class AdaptiveSearchManager:
         
         return min(1.0, quality_score)
     
-    def _reformulate_query(self, search_step: Dict[str, Any], 
-                          query_execution: QueryExecution,
-                          search_state: SearchState) -> str:
-        """
-        Reformulate a query to improve search results.
-        
-        Args:
-            search_step (Dict[str, Any]): The search step that was executed
-            query_execution (QueryExecution): The current query execution context
-            search_state (SearchState): The current search state
-            
-        Returns:
-            str: A reformulated query
-        """
+    def _reformulate_query(self, search_step: Dict[str, Any], query_execution: QueryExecution, search_state: SearchState) -> str:
+
         # Get strategy and current query
         strategy = search_step.get("search_strategy", SearchStrategy.GENERAL)
         current_query = search_state.query
