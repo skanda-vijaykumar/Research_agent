@@ -1,6 +1,3 @@
-"""
-Search planning components for the research agent.
-"""
 import re
 from datetime import datetime
 from typing import List, Dict, Any
@@ -8,23 +5,10 @@ from ..config import get_llm
 from ..models.data_models import SearchStrategy
 
 class StrategyPlanner:
-    """
-    Creates and revises search plans based on query classification.
-    """
     def __init__(self):
         self.llm = get_llm(temperature=0.1)
     
     def create_search_plan(self, query: str, classification: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """
-        Create a search plan based on query classification.
-        
-        Args:
-            query (str): The original user query
-            classification (Dict[str, Any]): Classification details from the query analyzer
-            
-        Returns:
-            List[Dict[str, Any]]: A list of search steps to execute
-        """
         strategies = classification.get("search_strategies", ["general"])
         entities = classification.get("entities", [])
         keywords = classification.get("search_keywords", [])
@@ -47,7 +31,6 @@ class StrategyPlanner:
             return self._create_general_search_plan(query, keywords)
     
     def _create_entity_search_plan(self, query: str, entities: List[str], keywords: List[str]) -> List[Dict[str, Any]]:
-        """Create a search plan focused on entity information."""
         main_entity = entities[0] if entities else ""
         
         plan = [
@@ -95,7 +78,6 @@ class StrategyPlanner:
         return plan
     
     def _create_technical_search_plan(self, query: str, keywords: List[str]) -> List[Dict[str, Any]]:
-        """Create a search plan for technical queries."""
         return [
             {
                 "id": "technical-overview",
@@ -124,7 +106,6 @@ class StrategyPlanner:
         ]
     
     def _create_news_search_plan(self, query: str, entities: List[str], keywords: List[str]) -> List[Dict[str, Any]]:
-        """Create a search plan for news and recent information queries."""
         main_subject = entities[0] if entities else ' '.join(keywords[:3])
         current_year = datetime.now().year
         
@@ -156,7 +137,6 @@ class StrategyPlanner:
         ]
     
     def _create_comparison_search_plan(self, query: str, entities: List[str], keywords: List[str]) -> List[Dict[str, Any]]:
-        """Create a search plan for comparison queries."""
         if len(entities) >= 2:
             entity1, entity2 = entities[0], entities[1]
         else:
@@ -195,7 +175,6 @@ class StrategyPlanner:
         ]
     
     def _create_general_search_plan(self, query: str, keywords: List[str]) -> List[Dict[str, Any]]:
-        """Create a general search plan for other types of queries."""
         # Extract key terms for searching
         search_terms = ' '.join(keywords[:4]) if keywords else query
         
@@ -221,17 +200,6 @@ class StrategyPlanner:
     def revise_plan(self, original_plan: List[Dict[str, Any]], 
                    executed_steps: List[Dict[str, Any]], 
                    results_quality: Dict[str, float]) -> List[Dict[str, Any]]:
-        """
-        Revise a search plan based on execution results.
-        
-        Args:
-            original_plan: The original search plan
-            executed_steps: Steps that have been executed
-            results_quality: Quality scores for executed steps
-            
-        Returns:
-            List[Dict[str, Any]]: The revised search plan
-        """
         # Clone the original plan
         revised_plan = original_plan.copy()
         
