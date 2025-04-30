@@ -1,6 +1,3 @@
-"""
-Task execution engine for the research agent.
-"""
 import re
 from typing import Dict, Any, List, Optional
 from datetime import datetime
@@ -16,9 +13,6 @@ from ..search.adaptive_search import AdaptiveSearchManager
 from ..synthesis.content_synthesis import ContentSynthesizer, ResultEvaluator
 
 class TaskExecutionEngine:
-    """
-    Main engine for executing search tasks and coordinating the end-to-end process.
-    """
     def __init__(self, tool_set: ToolSet):
         self.tool_set = tool_set
         self.query_classifier = QueryTypeClassifier()
@@ -29,16 +23,6 @@ class TaskExecutionEngine:
         self.llm = get_llm()
     
     def process_query(self, query: str, streamlit_containers=None) -> Dict[str, Any]:
-        """
-        Process a user query through the complete execution pipeline.
-        
-        Args:
-            query (str): The user query to process
-            streamlit_containers (Dict): Optional containers for Streamlit UI updates
-            
-        Returns:
-            Dict[str, Any]: The processing results including the answer
-        """
         # Create an execution context for this query
         execution = QueryExecution(original_query=query)
         
@@ -276,20 +260,7 @@ class TaskExecutionEngine:
             "execution_context": execution
         }
     
-    def _create_followup_query(self, original_query: str, 
-                              synthesized_result: Dict[str, Any],
-                              evaluation: Dict[str, Any]) -> str:
-        """
-        Create a follow-up query to address identified gaps.
-        
-        Args:
-            original_query (str): The original user query
-            synthesized_result (Dict[str, Any]): The synthesized result
-            evaluation (Dict[str, Any]): The evaluation of the result
-            
-        Returns:
-            str: A follow-up query to address gaps
-        """
+    def _create_followup_query(self, original_query: str, synthesized_result: Dict[str, Any], evaluation: Dict[str, Any]) -> str:
         gaps = evaluation.get("gaps", ["Missing specific details", "Incomplete information"])
         answer = synthesized_result.get("answer", "")
         
