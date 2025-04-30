@@ -1,6 +1,3 @@
-"""
-Content synthesis components for the research agent.
-"""
 import json
 import re
 from typing import Dict, Any, List
@@ -12,25 +9,11 @@ from ..config import get_llm
 from ..models.data_models import SearchState
 
 class ContentSynthesizer:
-    """
-    Synthesizes search results into a coherent answer.
-    """
     def __init__(self):
         self.llm = get_llm(temperature=0.2)
     
     def synthesize(self, query: str, documents: List[Document], 
                   search_history: List[SearchState]) -> Dict[str, Any]:
-        """
-        Synthesize search results into a coherent answer.
-        
-        Args:
-            query (str): The original user query
-            documents (List[Document]): The documents to synthesize
-            search_history (List[SearchState]): The search history
-            
-        Returns:
-            Dict[str, Any]: The synthesized answer and reasoning
-        """
         if not documents:
             return {
                 "answer": f"I apologize, but I couldn't find specific information about '{query}'. This may be because the topic is very specialized, recent, or not widely documented online. Would you like me to suggest alternative search terms or approaches to find this information?",
@@ -112,25 +95,11 @@ class ContentSynthesizer:
 
 
 class ResultEvaluator:
-    """
-    Evaluates the quality of synthesized answers.
-    """
     def __init__(self):
         self.llm = get_llm(temperature=0.1)
     
     def evaluate_result(self, synthesis_result: Dict[str, Any], query: str, 
                        documents: List[Document]) -> Dict[str, Any]:
-        """
-        Evaluate the quality of a synthesized answer.
-        
-        Args:
-            synthesis_result (Dict[str, Any]): The synthesized result
-            query (str): The original user query
-            documents (List[Document]): The documents used for synthesis
-            
-        Returns:
-            Dict[str, Any]: Evaluation metrics and feedback
-        """
         if not documents:
             return {
                 "quality_score": 0.2,
