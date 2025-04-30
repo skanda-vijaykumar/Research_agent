@@ -57,6 +57,7 @@ def main():
     except Exception as e:
         st.error(f"An error occurred while initializing the application: {str(e)}")
         st.info("Please try refreshing the page or contact the administrator if the issue persists.")
+from research_agent.app import main
 
 if __name__ == "__main__":
     main()
