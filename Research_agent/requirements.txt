@@ -1,0 +1,11 @@
+streamlit 
+langchain 
+langchain-ollama 
+langchain-community 
+tavily-python 
+python-dotenv 
+pydantic 
+python-dateutil 
+torch 
+numpy 
+sentence-transformers
