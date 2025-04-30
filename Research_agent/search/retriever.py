@@ -1,6 +1,3 @@
-"""
-Search retrievers for the research agent.
-"""
 import re
 import math
 import numpy as np
@@ -17,9 +14,6 @@ from langchain_community.utilities import GoogleSerperAPIWrapper
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 
 class EnhancedMultiSearchRetriever(BaseRetriever):
-    """
-    A retriever that combines results from multiple search engines.
-    """
     tavily_client: TavilyClient = Field(...)
     serper_client: GoogleSerperAPIWrapper = Field(...)
     ddg_search: DuckDuckGoSearchAPIWrapper = Field(...)
@@ -44,7 +38,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
                 print("Falling back to basic text similarity")
     
     def _get_tavily_documents(self, query: str) -> List[Document]:
-        """Get documents from Tavily search."""
         try:
             # Configure search parameters based on search type
             search_depth = "advanced"
@@ -119,7 +112,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
             return []
     
     def _get_serper_documents(self, query: str) -> List[Document]:
-        """Get documents from Google Serper search."""
         try:
             # Enhance query based on search type
             enhanced_query = self._enhance_query(query)
@@ -210,7 +202,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
             return []
     
     def _get_ddg_documents(self, query: str) -> List[Document]:
-        """Get documents from DuckDuckGo search."""
         try:
             # Enhance query based on search type
             enhanced_query = self._enhance_query(query)
@@ -268,7 +259,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
             return []
     
     def _enhance_query(self, query: str) -> str:
-        """Enhance a query based on the search type."""
         # Extract main entity and concepts from query
         main_terms = []
         
@@ -306,7 +296,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
             return query
     
     def _extract_date(self, content: str) -> Optional[datetime]:
-        """Extract a date from document content if available."""
         date_patterns = [
             r'(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2},?\s+\d{4}',
             r'\d{4}-\d{2}-\d{2}',
@@ -324,7 +313,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
         return None
     
     def _compute_scores(self, query: str, documents: List[Document]) -> List[tuple]:
-        """Compute relevance scores for documents."""
         if not documents:
             return []
             
@@ -397,7 +385,6 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
             return list(zip(documents, [1.0] * len(documents)))
     
     def _get_relevant_documents(self, query: str) -> List[Document]:
-        """Get relevant documents for a query across multiple search engines."""
         tavily_docs = self._get_tavily_documents(query)
         serper_docs = self._get_serper_documents(query)
         ddg_docs = self._get_ddg_documents(query)
@@ -420,17 +407,12 @@ class EnhancedMultiSearchRetriever(BaseRetriever):
         return [doc for doc, _ in reranked_docs[:10]]
     
     async def _aget_relevant_documents(self, query: str) -> List[Document]:
-        """Async version of get_relevant_documents."""
         return self._get_relevant_documents(query)
 
 
 class DummySearchRetriever(BaseRetriever):
-    """A fallback retriever that returns empty results."""
-    
     def _get_relevant_documents(self, query: str) -> List[Document]:
-        """Return an empty list of documents."""
         return []
     
     async def _aget_relevant_documents(self, query: str) -> List[Document]:
-        """Async version of get_relevant_documents."""
         return []
