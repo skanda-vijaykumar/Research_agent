@@ -1,6 +1,3 @@
-"""
-Query analysis components for the research agent.
-"""
 import re
 import json
 from typing import Dict, Any
@@ -8,9 +5,6 @@ from langchain_core.messages import HumanMessage
 from ..config import get_llm
 
 class QueryTypeClassifier:
-    """
-    Classifies user queries to determine their type and appropriate search strategies.
-    """
     def __init__(self):
         self.llm = get_llm(temperature=0.0)
     
